@@ -25,89 +25,196 @@ class Datagram:
 		return ''.join(self._data)
 		
 	# General common use append functions.
+
+	'''
+ 	 * Adds a boolean value to the datagram.
+ 	'''
 	def addBool(self, bool):
+		# Check if the parsed value is actually a bool.
+		assert(int(bool) == 0 or int(bool) == 1)
 		self.addUint8(int(bool))
 	
+	'''
+ 	 * Adds a signed 8-bit integer to the datagram.
+ 	'''
 	def addInt8(self, int):
+		# Check if the parsed value is an Int8.
+		assert(int >= -128 and int <= 127)
 		data = struct.pack('<i', int)
-		self.appendData(data, 1)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds a signed 16-bit integer to the datagram.
+ 	'''
 	def addInt16(self, int):
-		# TODO - Little Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Int16.
+		assert(int >= -32768 and int <= 32767)
+		data = struct.pack('<i', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds a signed 32-bit integer to the datagram.
+ 	'''
 	def addInt32(self, int):
-		# TODO - Little Endianness
-		self.appendData(int, len(int))
-		
+		# Check if the parsed value is an Int32.
+		assert(int >= -2147483648 and int <= 2147483647)
+		data = struct.pack('<i', int)
+		self.appendData(data, len(str(int)))
+
+	'''
+ 	 * Adds a signed 64-bit integer to the datagram.
+ 	'''	
 	def addInt64(self, int):
-		# TODO - Little Endianness
-		self.appendData(int, len(int))
-		
+		# Check if the parsed value is an Int64.
+		assert(int >= -9223372036854775808 and int <= 9223372036854775807)
+		data = struct.pack('<i', int)
+		self.appendData(data, len(str(int)))
+
+	'''
+ 	 * Adds a variable-length string to the datagram. This actually adds a count
+ 	 * followed by n bytes.
+ 	'''
 	def addString(self, string):
-		# The max sendable length for a string is 2^16.
+		# The max sendable length for a normal string is 2^16.
 		# Check if the string is less than or equal to the max length.
 		assert(len(string) <= 65536)
 
 		# Strings always are preceded by their length.
 		self.addUint16(len(string))
+		self.appendData(string, len(string))
 
+	'''
+ 	 * Adds a variable-length string to the datagram, using a 32-bit length field
+ 	 * to allow very long strings.
+ 	'''
+ 	def addString32(self, string):
+		# Strings always are preceded by their length.
+		self.addUint32(len(string))
 		self.appendData(string, len(string))
 		
-	# Functions for appending the datagram with unsigned integers (UInts).	
+	# Functions for appending the datagram with unsigned integers (UInts).
+
+	'''
+ 	 * Adds an unsigned 8-bit integer to the datagram.
+ 	'''
 	def addUint8(self, int):
-		self.appendData(int, 1)
-		
+		# Check if the parsed value is an Unsigned Int8.
+		assert(int >= 0 and int <= 255)
+		data = struct.pack('<I', int)
+		self.appendData(data, len(str(int)))
+	
+	'''
+ 	 * Adds an unsigned 16-bit integer to the datagram.
+ 	'''
 	def addUint16(self, int):
+		# Check if the parsed value is an Unsigned Int16.
+		assert(int >= 0 and int <= 65535)
 		data = struct.pack('<I', int)
 		self.appendData(data, len(str(int)))
 
+	'''
+ 	 * Adds an unsigned 32-bit integer to the datagram.
+ 	'''
 	def addUint32(self, int):
-		# TODO - Little Endianness
-		self.appendData(int, len(int))
-		
+		# Check if the parsed value is an Unsigned Int32.
+		assert(int >= 0 and int <= 4294967295)
+		data = struct.pack('<I', int)
+		self.appendData(data, len(str(int)))
+
+	'''
+	 * Adds an unsigned 64-bit integer to the datagram.
+ 	'''
 	def addUint64(self, int):
-		# TODO - Little Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Unsigned Int64.
+		assert(int >= 0 and int <= 18446744073709551615)
+		data = struct.pack('<I', int)
+		self.appendData(data, len(str(int)))
 		
-	# Floats. You can achieve pretty good accuracy by multipling your int by 100 and then dividing by 100 on the other end of the wire.
+	# Functions for appending the datagram with floats.
+
+	'''
+ 	 * Adds a 32-bit single-precision floating-point number to the datagram.
+ 	 * Since this kind of float is not necessarily portable across different
+ 	 * architectures, special care is required.
+ 	'''
 	def addFloat32(self, float):
-		# TODO - Little Endianness
-		self.appendData(float, len(float))
+		data = struct.pack('<f', float)
+		self.appendData(data, len(str(float)))
 		
+	'''
+ 	 * Adds a 64-bit floating-point number to the datagram.
+ 	'''
 	def addFloat64(self, float):
-		# TODO - Little Endianness
-		self.appendData(float, len(float))
+		data = struct.pack('<f', float)
+		self.appendData(data, len(str(float)))
 		
-	# Big Endian
+	# Big Endian formated functions.
+
+	'''
+ 	 * Adds a signed 16-bit big-endian integer to the datagram.
+ 	'''
 	def addBeInt16(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Int16.
+		assert(int >= -32768 and int <= 32767)
+		data = struct.pack('>i', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds a signed 32-bit big-endian integer to the datagram.
+ 	'''
 	def addBeInt32(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Int32.
+		assert(int >= -2147483648 and int <= 2147483647)
+		data = struct.pack('>i', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds a signed 64-bit big-endian integer to the datagram.
+ 	'''
 	def addBeInt64(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Int64.
+		assert(int >= -9223372036854775808 and int <= 9223372036854775807)
+		data = struct.pack('>i', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+	 * Adds an unsigned 16-bit big-endian integer to the datagram.
+ 	'''
 	def addBeUint16(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Unsigned Int16.
+		assert(int >= 0 and int <= 65535)
+		data = struct.pack('>I', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds an unsigned 32-bit big-endian integer to the datagram.
+ 	'''	
 	def addBeUint32(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
+		# Check if the parsed value is an Unsigned Int32.
+		assert(int >= 0 and int <= 4294967295)
+		data = struct.pack('>I', int)
+		self.appendData(data, len(str(int)))
 		
+	'''
+ 	 * Adds an unsigned 64-bit big-endian integer to the datagram.
+ 	'''
 	def addBeUint64(self, int):
-		# TODO - Big Endianness
-		self.appendData(int, len(int))
-		
+		# Check if the parsed value is an Unsigned Int64.
+		assert(int >= 0 and int <= 18446744073709551615)
+		data = struct.pack('>I', int)
+		self.appendData(data, len(str(int)))
+
+	'''
+ 	 * Adds a 32-bit single-precision big-endian floating-point number to the
+ 	 * datagram.
+ 	'''
 	def addBeFloat32(self, float):
-		# TODO - Big Endianness
-		self.appendData(float, len(float))
+		data = struct.pack('>f', float)
+		self.appendData(data, len(str(float)))
 		
+	'''
+ 	 * Adds a 64-bit big-endian floating-point number to the datagram.
+ 	'''	
 	def addBeFloat64(self, float):
-		# TODO - Big Endianness
-		self.appendData(float, len(float))
+		data = struct.pack('>f', float)
+		self.appendData(data, len(str(float)))
