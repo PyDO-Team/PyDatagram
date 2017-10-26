@@ -21,8 +21,25 @@ class Datagram:
 
 		self._data.append(data)
 
+	'''
+ 	 * Returns the datagram's data as a string.
+ 	'''
 	def getMessage(self):
 		return ''.join(self._data)
+
+	'''
+ 	 * Returns the number of bytes in the datagram.
+ 	'''
+	def getLength(self):
+		return len(self.getMessage())
+	
+	'''
+ 	 * Returns the actual array used in the Datagram.
+ 	 * We use a list over an array, but you get the point.
+ 	 * Generally this should never be called.
+ 	'''
+	def getArray(self):
+		return self._data
 		
 	# General common use append functions.
 
