@@ -1,7 +1,8 @@
 from PyDatagram import PyDatagram
+from DatagramIterator import DatagramIterator
 
 datagram = PyDatagram()
 datagram.addInt8(127)
 datagram.addString("Test")
-print(datagram.getMessage())
-print(datagram.getLength())
+
+dgi = DatagramIterator(datagram)

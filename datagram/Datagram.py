@@ -19,7 +19,8 @@ class Datagram:
 	def appendData(self, data, size):
 		assert(int(size) >= 0)
 
-		self._data.append(data)
+		# Index (Position in list), Data
+		self._data.insert(str(data + size), str(data))
 
 	'''
  	 * Returns the datagram's data as a string.
