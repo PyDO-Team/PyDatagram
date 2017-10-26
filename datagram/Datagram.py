@@ -77,7 +77,7 @@ class Datagram:
 	def addString(self, string):
 		# The max sendable length for a normal string is 2^16.
 		# Check if the string is less than or equal to the max length.
-		assert(len(string) <= 65536)
+		assert(len(string) <= 65535)
 
 		# Strings always are preceded by their length.
 		self.addUint16(len(string))
