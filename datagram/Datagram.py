@@ -19,8 +19,7 @@ class Datagram:
 	def appendData(self, data, size):
 		assert(int(size) >= 0)
 
-		# Index (Position in list), Data
-		self._data.insert(str(data + size), str(data))
+		self._data.append(data)
 
 	'''
  	 * Returns the datagram's data as a string.
@@ -33,6 +32,12 @@ class Datagram:
  	'''
 	def getLength(self):
 		return len(self.getMessage())
+
+	'''
+ 	 * Returns the datagram's data.
+ 	'''
+	def getData(self):
+		return self._data
 	
 	'''
  	 * Returns the actual array used in the Datagram.
