@@ -6,7 +6,7 @@ The datagram iterator file responsible for retrieving values out of datagram's.
 This code was largely ported from Panda3D's C++ implementation of Datagram's.
 '''
 
-class DatagramIterator:
+class PyDatagramIterator:
 	
 	# Core functions surrounding datagrams
 	def __init__(self, datagram, index=0):
